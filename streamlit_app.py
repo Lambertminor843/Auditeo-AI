@@ -180,7 +180,7 @@ if submit_button:
                     st.divider()
 
                     # --- KPIs in Bar Chart ---
-                    st.header("📈 Key Performance Indicators (KPIs)")
+                    st.header("📈 Score Overview")
                     kpis = data.get("kpis", {})
                     if kpis:
                         kpi_data = {

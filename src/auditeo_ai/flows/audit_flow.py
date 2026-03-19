@@ -79,7 +79,7 @@ class AuditFlow(Flow[AuditFlowState]):
         crew_result = insights_crew.kickoff(inputs=inputs)
 
         token_usage = crew_result.token_usage
-        self.state.execution_context.total_token_usage += int(token_usage)
+        self.state.execution_context.total_token_usage += token_usage.total_tokens
 
         self.state.insights_crew_output = InsightsCrewOutput(
             kpis=crew_result["kpis"],
@@ -112,14 +112,11 @@ class AuditFlow(Flow[AuditFlowState]):
         crew_result = recommendations_crew.kickoff(inputs=inputs)
 
         token_usage = crew_result.token_usage
-        self.state.execution_context.total_token_usage += int(token_usage)
+        self.state.execution_context.total_token_usage += token_usage.total_tokens
 
         self.state.recommendations_crew_output = RecommendationCrewOutput(
             recommendations=crew_result["recommendations"],
             validation_status=crew_result["validation_status"],
         )
-
-        debug_path = self._save_crew_kickoff_debug(crew_result, self.state.website_url)
-        print(f"Crew kickoff debug saved to {debug_path}")
 
         print("Recommendations crew successfully run. \n")
