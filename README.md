@@ -73,6 +73,7 @@ Using a multi-agent framework like CrewAI provides several key advantages over a
 
 ### Future Planned Improvements
 
+- **Conversational Interactive Agent:** Adding an AI assistant that allows users to ask questions about the audit report and automatically generate code snippets or actionable tasks based on the recommendations.
 - **Parallel Agent Execution:** Implementing asynchronous execution for non-dependent agent tasks to reduce overall audit latency.
 - **Multi-Page Site Crawling:** Expanding the scraper to follow internal links and audit core user journeys across multiple pages.
 - **PDF Report Generation:** Adding functionality to export the final audit report and recommendations as a branded PDF for client deliverables.
