@@ -50,6 +50,6 @@ reporting_task:
     ### RULES
     - Do not mention the scraping tool; act as if this was an expert human audit.
     - Ensure the final output is compatible with the `InsightCrewOutput` Pydantic class.
-expected_output: >
+  expected_output: >
     A fully populated `InsightCrewOutput` object containing KPIs, a detailed Markdown report, and prioritized Recommendations.
-agent: reporter_agent
+  agent: reporter_agent

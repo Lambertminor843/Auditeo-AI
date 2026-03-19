@@ -33,7 +33,7 @@ class InsightsCrew:
         return Agent(
             config=self.agents_config["analyst_agent"],
             verbose=self._enable_verbose(),
-            llm=LLMs.gpt_5,
+            llm=LLMs.gpt_5_4,
         )
 
     @agent
@@ -46,7 +46,7 @@ class InsightsCrew:
             config=self.agents_config["reporter_agent"],
             verbose=self._enable_verbose(),
             output_pydantic=InsightsCrewOutput,
-            llm=LLMs.gpt_5,
+            llm=LLMs.gpt_5_4_mini,
         )
 
     @task
@@ -72,6 +72,8 @@ class InsightsCrew:
         """
         Crew
         """
+
+        print(f"Agents: {self.agents}")
 
         return Crew(
             agents=self.agents,

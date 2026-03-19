@@ -2,6 +2,7 @@
 Audit Flow
 """
 
+import json
 from datetime import datetime
 from pathlib import Path
 from urllib.parse import urlparse
@@ -47,6 +48,39 @@ class AuditFlow(Flow[AuditFlowState]):
         md_path.write_text(output.structured_report)
         return json_path
 
+    def _save_crew_kickoff_debug(self, crew_result, website_url: str | None) -> Path:
+        domain = (
+            urlparse(website_url).netloc if website_url else "unknown-site"
+        ) or "unknown-site"
+        timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+        reports_path = Path("reports")
+        reports_path.mkdir(parents=True, exist_ok=True)
+        path = reports_path / f"audit_crew_kickoff_{domain}_{timestamp}.txt"
+
+        parts: list[str] = []
+        parts.append("=== Raw Output ===\n")
+        parts.append(str(crew_result.raw))
+        parts.append("\n\n=== JSON Output ===\n")
+        if crew_result.json_dict:
+            parts.append(json.dumps(crew_result.json_dict, indent=2))
+        else:
+            parts.append("(none)")
+        parts.append("\n\n=== Pydantic Output ===\n")
+        if crew_result.pydantic:
+            p = crew_result.pydantic
+            parts.append(
+                p.model_dump_json(indent=2) if hasattr(p, "model_dump_json") else str(p)
+            )
+        else:
+            parts.append("(none)")
+        parts.append("\n\n=== Tasks Output ===\n")
+        parts.append(str(crew_result.tasks_output))
+        parts.append("\n\n=== Token Usage ===\n")
+        parts.append(str(crew_result.token_usage))
+
+        path.write_text("".join(parts), encoding="utf-8")
+        return path
+
     @start()
     def get_metrics(self) -> str:
         """
@@ -79,12 +113,16 @@ class AuditFlow(Flow[AuditFlowState]):
             "factual_metrics": self.state.factual_metrics.model_dump_json(indent=2),
             "page_content": self.state.page_content,
             "cta_count": self.state.factual_metrics.cta_count,
-            "word_count": self.state.factual_metrics.total_word_count,
-            "images_missing_alt_text_pct": self.state.factual_metrics.images_missing_alt_text_pct,
+            "total_word_count": self.state.factual_metrics.total_word_count,
+            "images_missing_alt_text_pct": (
+                self.state.factual_metrics.images_missing_alt_text_pct
+            ),
         }
         print(f"Insights crew inputs: {inputs}")
         insights_crew = InsightsCrew().crew()
         crew_result = insights_crew.kickoff(inputs=inputs)
-        self.state.insights_crew_output = crew_result.pydantic
+
+        debug_path = self._save_crew_kickoff_debug(crew_result, self.state.website_url)
+        print(f"Crew kickoff debug saved to {debug_path}")
 
         print("Insights crew successfully run. \n")
