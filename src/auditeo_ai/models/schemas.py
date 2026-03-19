@@ -3,6 +3,7 @@ from typing import Any
 from pydantic import BaseModel, Field
 
 from auditeo_ai.models import (
+    ExecutionContext,
     FactualMetrics,
     InsightsKPIs,
     RecommendationItem,
@@ -17,6 +18,9 @@ class APIResponse(BaseModel):
     success: bool = Field(description="Whether the API response was successful")
     trace_id: str = Field(description="The trace ID of the API response")
     message: str = Field(description="The message of the API response")
+    execution_context: ExecutionContext | None = Field(
+        default=None, description="The execution context of the API response"
+    )
     data: Any | None = Field(default=None, description="The data of the API response")
 
 

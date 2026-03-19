@@ -1,3 +1,4 @@
+from .execution import ExecutionContext, ExecutionStatus
 from .insights import InsightsCrewOutput, InsightsKPIs
 from .metrics import FactualMetrics, HeadingCounts, LinkCounts
 from .recommendations import RecommendationCrewOutput, RecommendationItem
@@ -14,4 +15,6 @@ __all__ = [
     "APIResponse",
     "AuditRunResponse",
     "AuditRunRequest",
+    "ExecutionContext",
+    "ExecutionStatus",
 ]

@@ -1,3 +1,5 @@
+import uuid
+from datetime import datetime
 from typing import Any
 
 from fastapi import APIRouter, HTTPException
@@ -7,6 +9,8 @@ from auditeo_ai.models import (
     APIResponse,
     AuditRunRequest,
     AuditRunResponse,
+    ExecutionContext,
+    ExecutionStatus,
 )
 from auditeo_ai.utils import flow_loop_executor, get_logger
 
@@ -29,6 +33,11 @@ def _execute_audit_flow(
 
     try:
         flow = AuditFlow()
+        inputs["execution_context"] = ExecutionContext(
+            id=str(uuid.uuid4()),
+            status=ExecutionStatus.PENDING,
+            start_time=datetime.now(),
+        )
         flow.kickoff(inputs=inputs)
         data = AuditRunResponse(
             website_url=flow.state.website_url,
@@ -41,16 +50,21 @@ def _execute_audit_flow(
                 else None
             ),
         )
+        flow.state.execution_context.status = ExecutionStatus.COMPLETED
+        flow.state.execution_context.end_time = datetime.now()
         trace_id = logger.info("Audit flow executed successfully")
         return APIResponse(
             success=True,
             trace_id=trace_id,
             message="Audit flow executed successfully",
             data=data,
+            execution_context=flow.state.execution_context,
         )
 
     except Exception as e:
         trace_id = logger.error(f"Audit flow failed: \n{e}", exc_info=True)
+        flow.state.execution_context.status = ExecutionStatus.FAILED
+        flow.state.execution_context.end_time = datetime.now()
         return APIResponse(
             success=False,
             trace_id=trace_id,
