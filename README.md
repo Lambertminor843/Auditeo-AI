@@ -98,6 +98,8 @@ python -m auditeo_ai.main
 ```
 The API will be available at `http://localhost:8000`.
 
+For detailed API documentation, please refer to the [API Documentation](./wiki/API.md).
+
 ### 2. Run the Frontend UI (Streamlit)
 
 In a new terminal window, start the Streamlit app:
