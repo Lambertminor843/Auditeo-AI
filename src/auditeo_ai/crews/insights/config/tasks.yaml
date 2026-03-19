@@ -1,35 +1,55 @@
 analysis_task:
   description: >
-    Conduct a comprehensive analysis of {website_url}.
-    
-    DATA INPUTS:
-    - Factual Metrics: {factual_metrics}
-    - Clean Page Content: {page_content}
-    
-    YOUR ANALYSIS MUST COVER:
-    1. SEO Structure: Evaluate H1-H3 hierarchy and meta-data.
-    2. Messaging Clarity: Does the text clearly explain the value prop?
-    3. CTA Usage: Analyze the {factual_metrics.cta_count} CTAs. Are they sufficient for the {factual_metrics.total_word_count} words?
-    4. Content Depth: Is the content substantial enough for the topic?
-    5. UX Concerns: Identify any structural red flags.
+    ### OBJECTIVE
+    Perform a high-fidelity audit of {website_url} by cross-referencing {factual_metrics} 
+    against the provided page content.
 
-    KPI CALCULATION:
-    Calculate a 0-100 score for: SEO, Links, Usability, and Social based STRICTLY on the metrics.
+    ### STEP-BY-STEP PROCESS
+    1. **Metric Validation:** Compare the `total_word_count` to the `cta_count`. Calculate the 'CTA Density' (CTAs per 500 words).
+    2. **Hierarchical Integrity:** Audit the `heading_counts`. Look for 'Heading Gaps' (e.g., H1 followed immediately by H3).
+    3. **Asset Optimization:** Analyze the `images_missing_alt_text_pct`. Evaluate the impact on accessibility and SEO Indexing.
+    4. **Contextual Messaging:** Scan {page_content_clean} for 'Primary Value Prop' (PVP). Does it exist in the H1? 
+    5. **Structural UX:** Identify 'Conversion Friction'—where links/CTAs are present but messaging is too thin to drive clicks.
+
+    ### RULES
+    - NO GENERIC ADVICE. If you suggest adding alt text, you MUST cite the current percentage: {images_missing_alt_text_pct}%.
+    - If `h1` count is not exactly 1, mark it as a 'Critical Architectural Failure.'
+    - Use 'Auditeo AI' terminology: 'Metric-Content Mismatch' or 'CTA Fragmentation.'
+
+    ### KPI RATING LOGIC (0-100)
+    - SEO: Based on H-tags, Title, and Meta.
+    - Links: Internal/External ratio (Optimal is 3:1).
+    - Usability: Based on CTA accessibility and word-to-content ratio.
+    - Social: Presence of Meta-descriptions and OG-readiness.
+
+    ###  ======================== Source Page Content ========================
+    {page_content}
   expected_output: >
-    A detailed internal analysis document containing specific findings, metric references, and raw KPI scores.
+    A multi-layered technical briefing containing 'Observed Facts', 'Strategic Implications', and raw KPI percentages.
   agent: analyst_agent
 
 reporting_task:
   description: >
-    Review the analysis from the Analyst Agent and format it into a professional Markdown report.
-    
-    The report must include:
-    - A 'Scorecard' section using the calculated KPIs.
-    - A 'Top 5 Action Items' list.
-    - Deep dives into SEO, Messaging, and UX.
-    - References to the factual data (e.g., "Only {factual_metrics.images_missing_alt_text_pct}% of images have alt text").
-    
-    Finally, populate the InsightCrewOutput Pydantic structure.
-  expected_output: >
-    A high-end Markdown report and a validated InsightCrewOutput object containing the KPIs and report text.
-  agent: reporter_agent
+    ### OBJECTIVE
+    Synthesize the 'Auditeo AI' briefing into a world-class Markdown Report and populate the `InsightCrewOutput` model.
+
+    ### STEP-BY-STEP PROCESS
+    1. **Executive Summary:** Generate a 2-sentence 'State of the Site' overview.
+    2. **The Scorecard:** Render the SEO, Links, Usability, and Social KPIs in a clear visual format.
+    3. **Strategic Deep Dive:** Organize findings into:
+       - 'Technical Foundation' (SEO/Metadata)
+       - 'User Psychology' (Messaging/CTAs)
+       - 'Content Architecture' (Depth/Structure)
+    4. **The Action Plan:** Provide 3-5 prioritized recommendations. Each must follow the 'Action-Reason-Impact' format.
+
+    ### IMPORTANT NOTES
+    - Use professional, enterprise-level Markdown (H1-H4, Tables, Blockquotes).
+    - Bold all specific metrics used (e.g., **{total_word_count} words**).
+    - Ensure the 'Action Plan' is ordered by 'Business Impact' (High to Low).
+
+    ### RULES
+    - Do not mention the scraping tool; act as if this was an expert human audit.
+    - Ensure the final output is compatible with the `InsightCrewOutput` Pydantic class.
+expected_output: >
+    A fully populated `InsightCrewOutput` object containing KPIs, a detailed Markdown report, and prioritized Recommendations.
+agent: reporter_agent

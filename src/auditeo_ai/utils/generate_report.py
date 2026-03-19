@@ -6,6 +6,8 @@ from urllib.parse import urlparse
 from reportlab.lib.pagesizes import A4
 from reportlab.pdfgen import canvas
 
+from auditeo_ai.models import InsightsCrewOutput
+
 
 def _wrap_text(value: str, width: int = 100) -> list[str]:
     words = value.split()
@@ -81,6 +83,22 @@ def generate_pdf_report(state: Any, output_dir: str = "reports") -> Path:
         )
         write_line(f"Meta title: {metrics.meta_title or 'N/A'}")
         write_line(f"Meta description: {metrics.meta_description or 'N/A'}")
+        write_line("")
+
+    insights: InsightsCrewOutput | None = getattr(
+        state, "insights_crew_output", None
+    )
+    if insights is not None:
+        write_line("Insights & KPIs", "Helvetica-Bold", 14)
+        write_line(f"SEO score: {insights.kpis.seo_score}")
+        write_line(f"Links score: {insights.kpis.links_score}")
+        write_line(f"Usability score: {insights.kpis.usability_score}")
+        write_line(f"Social score: {insights.kpis.social_score}")
+        write_line("")
+        write_line("Structured Report:", "Helvetica-Bold", 12)
+        report_preview = (insights.structured_report or "")[:2000]
+        for line in _wrap_text(report_preview, width=95):
+            write_line(f"  {line}")
         write_line("")
 
     write_line("Flow State Snapshot", "Helvetica-Bold", 14)

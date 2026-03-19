@@ -1,15 +1,14 @@
 from crewai import Agent, Crew, Process, Task
 from crewai.agents.agent_builder.base_agent import BaseAgent
 from crewai.project import CrewBase, agent, crew, task
-from pydantic import BaseModel, Field
 
 from auditeo_ai.config import LLMs
-from auditeo_ai.models import InsightsKPIs
+from auditeo_ai.models import InsightsCrewOutput
 from auditeo_ai.utils import is_development
 
 
 @CrewBase
-class InsightsCrew(Crew):
+class InsightsCrew:
     """
     Insights Crew.
 
@@ -26,7 +25,7 @@ class InsightsCrew(Crew):
     tasks: list[Task]
 
     @agent
-    def analyst_agent(self) -> BaseAgent:
+    def analyst_agent(self) -> Agent:
         """
         Analyst Agent.
         Analyzes the metrics and page content.
@@ -38,7 +37,7 @@ class InsightsCrew(Crew):
         )
 
     @agent
-    def reporter_agent(self) -> BaseAgent:
+    def reporter_agent(self) -> Agent:
         """
         Reporter Agent.
         Formats the analysis into a report.
@@ -83,10 +82,3 @@ class InsightsCrew(Crew):
     def _enable_verbose(self) -> bool:
         """Enable verbose mode."""
         return is_development()
-
-
-class InsightsCrewOutput(BaseModel):
-    kpis: InsightsKPIs
-    structured_report: str = Field(
-        description="The full Markdown report for the client."
-    )
