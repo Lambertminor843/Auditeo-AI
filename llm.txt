@@ -1,0 +1,61 @@
+# Auditeo AI - Project Context for LLMs
+
+## Overview
+Auditeo AI is an autonomous, multi-agent website auditing tool. It extracts factual metrics, evaluates technical SEO and UX, and provides prioritized, actionable recommendations to improve website performance and conversion rates.
+
+## Architecture & Tech Stack
+- **Frontend UI:** Streamlit (`http://localhost:8501`)
+- **Backend API:** FastAPI (`http://localhost:8000`)
+- **Audit Flow Engine:** CrewAI (Multi-agent orchestration)
+- **Package Manager:** `uv`
+- **Code Quality:** `ruff` (linting and formatting)
+
+## Audit Process (CrewAI Flow)
+The system uses a stateful flow (`AuditFlowState`) to maintain context (URL, metrics, content, insights, recommendations) across the pipeline.
+
+1. **Scrape & Get Metrics:** Scrape website, extract factual metrics, clean HTML (remove scripts/SVGs), and set initial state (Data Grounding Layer).
+2. **InsightsCrew:**
+   - `analyst_agent` (GPT 5.4): Analyzes metrics and page content.
+   - `reporter_agent` (GPT 5.4 Mini): Formats analysis into a structured report.
+3. **RecommendationCrew:**
+   - `strategy_lead` (GPT 5.4): Formulates 3-5 high-impact, prioritized recommendations.
+   - `strategy_validator` (GPT 5.4 Mini): "Compliance Officer" that critically validates recommendations are 100% grounded in factual metrics to prevent hallucinations.
+4. **Wrap Response:** Packages final deliverables with Execution Context (token usage, execution time, status).
+
+## Key Design Principles
+- **Separation of Concerns:** Specialized agents for specific domains (e.g., analysis vs. formatting).
+- **Data Grounding:** Strict "Scrape First" policy. Agents rely on factual metrics and cleaned HTML, not pre-trained knowledge.
+- **Self-Correction:** Built-in validation step filters out generic or hallucinated advice.
+- **Model Routing:** Complex reasoning uses more capable models (GPT 5.4); formatting/validation uses faster, cost-effective models (GPT 5.4 Mini).
+- **Trade-offs:** Prioritizes deep, validated insights on a single URL over shallow domain-wide crawling; accepts higher execution latency and token consumption for quality.
+
+## Setup & Execution
+
+### Environment Variables (`.env`)
+```env
+OPENAI_API_KEY=your_openai_api_key_here
+ENV=development
+```
+
+### Installation
+```bash
+uv sync
+# Or: pip install -e .
+```
+
+### Running the Application (Requires 2 Terminals)
+**Terminal 1 (Backend):**
+```bash
+python -m auditeo_ai.main
+```
+
+**Terminal 2 (Frontend):**
+```bash
+uv run streamlit run streamlit_app.py
+```
+
+### Development Commands
+```bash
+uv run ruff check .
+uv run ruff format .
+```
